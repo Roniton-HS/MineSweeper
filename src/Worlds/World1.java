@@ -8,6 +8,7 @@ import java.awt.*;
 import java.util.Random;
 
 public class World1 extends Worlds {
+    int size = 50;
     MouseHandler mouseHandler = new MouseHandler();
     int[][] map = new int[10][10];
     int[][] clicked = new int[10][10];
@@ -21,31 +22,40 @@ public class World1 extends Worlds {
         initNum();
     }
 
+
+
     @Override
     public void tick() {
-        int clickX = mouseHandler.getClickX() / 50;
-        int clickY = mouseHandler.getClickY() / 50;
-        if (clickX < clicked.length && clickY < clicked.length && clicked[clickX][clickY] != 1) {
-
-            if (game.getKeyHandler().space && clicked[clickX][clickY] != 2) {
-                clicked[clickX][clickY] = 2;
-            } else if(clicked[clickX][clickY] != 2) {
-                if (map[clickX][clickY] == 8) {
-                    System.out.println("BOMB");
-                }
-                if (map[clickX][clickY] == 0) {
-                    reveal(clickX, clickY);
-                } else {
-                    clicked[clickX][clickY] = 1;
-                }
-            }else if(game.getKeyHandler().space && clicked[clickX][clickY] == 2){
-                clicked[clickX][clickY] = 0;
-            }
-            mouseHandler.reset();
-
-        }
+        input();
     }
 
+    private void input() {
+        int clickX = mouseHandler.getClickX() / size;
+        int clickY = mouseHandler.getClickY() / size;
+        if (clickX < clicked.length && clickY < clicked.length && clicked[clickX][clickY] != 1) {
+            if (clicked[clickX][clickY] != 2) {
+                if (game.getKeyHandler().space) { //mark
+                    clicked[clickX][clickY] = 2;
+                } else if (map[clickX][clickY] == 8) { //clicked bomb
+                    clicked[clickX][clickY] = 1;
+                    bomb();
+                } else if (map[clickX][clickY] == 0) { //clicked empty
+                    reveal(clickX, clickY);
+                } else { //clicked num
+                    clicked[clickX][clickY] = 1;
+                }
+            } else {
+                if (game.getKeyHandler().space) { //remove mark
+                    clicked[clickX][clickY] = 0;
+                }
+            }
+        }
+        mouseHandler.reset();
+    }
+
+    private void bomb() {
+        System.out.println("BOMB");
+    }
 
     private void reveal(int x, int y) {
         if (map[x][y] != 0 && clicked[x][y] == 0) {
@@ -123,7 +133,6 @@ public class World1 extends Worlds {
 
     @Override
     public void render(Graphics g) {
-        int size = 50;
         renderNum(g);
         for (int i = 0; i < clicked.length; i++) {
             for (int j = 0; j < clicked.length; j++) {
@@ -139,7 +148,6 @@ public class World1 extends Worlds {
             }
         }
 
-
     }
 
     private void renderNum(Graphics g) {
@@ -151,12 +159,12 @@ public class World1 extends Worlds {
             for (int j = 0; j < map.length; j++) {
                 int entry = map[j][i];
                 if (entry == 8) {
-                    g.drawString("x", xOff + j * 50, yOff + i * 50);
-                }else if(entry == 0){
+                    g.drawString("x", xOff + j * size, yOff + i * size);
+                } else if (entry == 0) {
                     continue;
                 } else {
                     String value = String.valueOf(entry);
-                    g.drawString(value, xOff + j * 50, yOff + i * 50);
+                    g.drawString(value, xOff + j * size, yOff + i * size);
                 }
             }
         }

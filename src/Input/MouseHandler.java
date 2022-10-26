@@ -19,15 +19,16 @@ public class MouseHandler implements MouseListener{
         clickY = 2000;
     }
 
+
     @Override
     public void mouseClicked(MouseEvent e){
-        clickX = e.getX();
-        clickY = e.getY();
+
     }
 
     @Override
     public void mousePressed(MouseEvent e){
-
+        clickX = e.getX();
+        clickY = e.getY();
     }
 
     @Override

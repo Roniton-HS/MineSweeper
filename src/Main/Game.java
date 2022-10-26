@@ -88,7 +88,7 @@ public class Game {
 
             if (System.currentTimeMillis() - fpsTpsTimer > 1000) {
                 fpsTpsTimer = System.currentTimeMillis();
-                System.out.println("FPS: " + frames + "  TPS: " + ticks);
+                //System.out.println("FPS: " + frames + "  TPS: " + ticks);
                 frames = 0;
                 ticks = 0;
             }
