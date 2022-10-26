@@ -41,7 +41,7 @@ public class Game {
         keyHandler = new KeyHandler();
         display = new Display(title, width, height); //creates Main.Main.Main.Main.Main.Display
         display.getFrame().addKeyListener(keyHandler); //adds KeyListener
-        World1 menuWorld = new World1(this);
+        MineSweeper menuWorld = new MineSweeper(this, 50, 20);
         Worlds.setWorld(menuWorld);
     }
 

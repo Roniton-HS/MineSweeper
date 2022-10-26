@@ -1,23 +1,32 @@
 package Worlds;
 
-import Input.KeyHandler;
 import Input.MouseHandler;
 import Main.Game;
 
 import java.awt.*;
 import java.util.Random;
 
-public class World1 extends Worlds {
-    int size = 50;
+public class MineSweeper extends Worlds {
+    int blockSize;
+    int mapSize;
     MouseHandler mouseHandler = new MouseHandler();
-    int[][] map = new int[10][10];
-    int[][] clicked = new int[10][10];
+    int[][] map;
+    int[][] clicked;
 
+    /**
+     * leere Felder müssen diagonal aufdecken
+     */
     /**
      * Constructor
      */
-    public World1(Game game) {
+    public MineSweeper(Game game, int blockSize, int mapSize) {
         super(game);
+        this.blockSize = blockSize;
+        this.mapSize = mapSize;
+        map = new int[mapSize][mapSize];
+        clicked = new int[mapSize][mapSize];
+
+
         initBombs();
         initNum();
     }
@@ -30,8 +39,8 @@ public class World1 extends Worlds {
     }
 
     private void input() {
-        int clickX = mouseHandler.getClickX() / size;
-        int clickY = mouseHandler.getClickY() / size;
+        int clickX = mouseHandler.getClickX() / blockSize;
+        int clickY = mouseHandler.getClickY() / blockSize;
         if (clickX < clicked.length && clickY < clicked.length && clicked[clickX][clickY] != 1) {
             if (clicked[clickX][clickY] != 2) {
                 if (game.getKeyHandler().space) { //mark
@@ -83,7 +92,8 @@ public class World1 extends Worlds {
     private void initBombs() {
         Random r = new Random();
         int ranX, ranY;
-        for (int i = 0; i < 7; i++) {
+        int bombs = mapSize * mapSize / 7;
+        for (int i = 0; i < bombs; i++) {
             ranX = r.nextInt(map.length);
             ranY = r.nextInt(map.length);
             if (map[ranX][ranY] != 8) {
@@ -138,13 +148,13 @@ public class World1 extends Worlds {
             for (int j = 0; j < clicked.length; j++) {
                 if (clicked[j][i] == 0) {
                     g.setColor(Color.BLUE);
-                    g.fillRect(j * size, i * size, size, size);
+                    g.fillRect(j * blockSize, i * blockSize, blockSize, blockSize);
                 } else if (clicked[j][i] == 2) {
                     g.setColor(Color.red);
-                    g.fillRect(j * size, i * size, size, size);
+                    g.fillRect(j * blockSize, i * blockSize, blockSize, blockSize);
                 }
                 g.setColor(Color.BLACK);
-                g.drawRect(j * size, i * size, size, size);
+                g.drawRect(j * blockSize, i * blockSize, blockSize, blockSize);
             }
         }
 
@@ -159,12 +169,12 @@ public class World1 extends Worlds {
             for (int j = 0; j < map.length; j++) {
                 int entry = map[j][i];
                 if (entry == 8) {
-                    g.drawString("x", xOff + j * size, yOff + i * size);
+                    g.drawString("x", xOff + j * blockSize, yOff + i * blockSize);
                 } else if (entry == 0) {
                     continue;
                 } else {
                     String value = String.valueOf(entry);
-                    g.drawString(value, xOff + j * size, yOff + i * size);
+                    g.drawString(value, xOff + j * blockSize, yOff + i * blockSize);
                 }
             }
         }
